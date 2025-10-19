@@ -4,8 +4,11 @@ import {
   DEFAULT_THRESHOLD_CONFIG,
   validateThresholdConfig,
   formatThresholdTime,
-} from 'shareables';
-import { SET_THRESHOLD_CONFIG, GET_THRESHOLD_CONFIG } from 'shareables';
+} from '@pomatez/shareables';
+import {
+  SET_THRESHOLD_CONFIG,
+  GET_THRESHOLD_CONFIG
+} from '@pomatez/shareables';
 
 interface ThresholdSettingsProps {
   onClose: () => void;
@@ -18,7 +21,7 @@ const ThresholdSettings: React.FC<ThresholdSettingsProps> = ({ onClose }) => {
 
   useEffect(() => {
     // Загружаем текущую конфигурацию
-    window.ipcRenderer.invoke(GET_THRESHOLD_CONFIG).then((savedConfig: ThresholdConfig | null) => {
+    (window as any).ipcRenderer.invoke(GET_THRESHOLD_CONFIG).then((savedConfig: ThresholdConfig | null) => {
       if (savedConfig) {
         setConfig(savedConfig);
       }
@@ -31,7 +34,7 @@ const ThresholdSettings: React.FC<ThresholdSettingsProps> = ({ onClose }) => {
     type: 'min' | 'max',
     value: number
   ) => {
-    setConfig(prev => ({
+    setConfig((prev: ThresholdConfig) => ({
       ...prev,
       [sessionType]: {
         ...prev[sessionType],
@@ -48,7 +51,7 @@ const ThresholdSettings: React.FC<ThresholdSettingsProps> = ({ onClose }) => {
     }
 
     setErrors([]);
-    window.ipcRenderer.send(SET_THRESHOLD_CONFIG, config);
+    (window as any).ipcRenderer.send(SET_THRESHOLD_CONFIG, config);
     onClose();
   };
 
