@@ -23,6 +23,12 @@ import {
   TRAY_ICON_UPDATE,
   SET_COMPACT_MODE,
   SET_OPEN_AT_LOGIN,
+  // Threshold constants
+  SET_THRESHOLD_CONFIG,
+  GET_THRESHOLD_CONFIG,
+  THRESHOLD_NOTIFICATION,
+  TIMER_THRESHOLD_UPDATE,
+  RESET_THRESHOLD_STATE,
 } from "@pomatez/shareables";
 import {
   activateGlobalShortcuts,
@@ -34,8 +40,10 @@ import {
   getFromStorage,
   createContextMenu,
 } from "./helpers";
+import { ThresholdTrayManager } from "./helpers/thresholdTrayManager";
 import isDev from "electron-is-dev";
 import store from "./store";
+import type { ThresholdConfig, TimerState } from "@pomatez/shareables";
 
 import "v8-compile-cache";
 import {
@@ -73,6 +81,7 @@ const getFrameHeight = () => {
 };
 
 let tray: Tray | null = null;
+let thresholdTrayManager: ThresholdTrayManager | null = null;
 
 let win: BrowserWindow | null;
 
@@ -84,6 +93,10 @@ const windowState: WindowStateProps = {
   isFullscreen: false,
   isOnCompactMode: false,
 };
+
+// Threshold state
+let currentThresholdConfig: ThresholdConfig | null = null;
+let currentTimerState: TimerState | null = null;
 
 function createMainWindow() {
   win = new BrowserWindow({
@@ -228,6 +241,12 @@ const contextMenu = Menu.buildFromTemplate([
 function createSystemTray() {
   tray = new Tray(trayIcon);
 
+  // Initialize threshold tray manager
+  if (!thresholdTrayManager) {
+    thresholdTrayManager = new ThresholdTrayManager(trayIcon);
+  }
+  thresholdTrayManager.setTray(tray);
+
   tray.setToolTip(trayTooltip);
   tray.setContextMenu(contextMenu);
 
@@ -240,6 +259,12 @@ function createSystemTray() {
       }
     }
   });
+
+  // Update tray with current threshold state if available
+  if (currentThresholdConfig && currentTimerState) {
+    thresholdTrayManager.updateThresholdConfig(currentThresholdConfig);
+    thresholdTrayManager.updateTimerState(currentTimerState);
+  }
 }
 
 type NotificationProps = {
@@ -266,6 +291,30 @@ function notify(props: NotificationProps) {
   notifier.notify(notification, (err, response) => {
     if (props.callback) props.callback(err, response);
   });
+}
+
+// Threshold notification handler
+function showThresholdNotification(data: {
+  title: string;
+  body: string;
+  color: 'green' | 'red';
+  type: 'min' | 'max';
+}) {
+  const icon = data.color === 'green' 
+    ? path.join(__dirname, "assets/notification-success.png")
+    : path.join(__dirname, "assets/notification-warning.png");
+
+  const notification: WindowsToaster.Notification &
+    NotificationCenter.Notification = {
+    icon: icon,
+    title: data.title,
+    message: data.body,
+    appID: "com.roldanjr.pomatez",
+    sound: true,
+    wait: false, // Не ждем ответа для threshold уведомлений
+  };
+
+  notifier.notify(notification);
 }
 
 if (!onlySingleInstance) {
@@ -362,6 +411,7 @@ if (!onlySingleInstance) {
   });
 }
 
+// Original IPC handlers
 ipcMain.on(SET_ALWAYS_ON_TOP, (e, { alwaysOnTop }) => {
   win?.setAlwaysOnTop(alwaysOnTop);
 });
@@ -449,6 +499,45 @@ ipcMain.on(SET_OPEN_AT_LOGIN, (e, { openAtLogin }) => {
       openAtLogin: openAtLogin,
       openAsHidden: openAtLogin,
     });
+  }
+});
+
+// New Threshold IPC handlers
+ipcMain.on(SET_THRESHOLD_CONFIG, (e, config: ThresholdConfig | null) => {
+  currentThresholdConfig = config;
+  store.safeSet("thresholdConfig", config);
+  
+  if (thresholdTrayManager) {
+    thresholdTrayManager.updateThresholdConfig(config);
+  }
+  
+  console.log('Threshold config updated:', config);
+});
+
+ipcMain.handle(GET_THRESHOLD_CONFIG, () => {
+  const savedConfig = store.safeGet("thresholdConfig");
+  currentThresholdConfig = savedConfig || null;
+  console.log('Retrieved threshold config:', savedConfig);
+  return savedConfig;
+});
+
+ipcMain.on(THRESHOLD_NOTIFICATION, (e, data) => {
+  showThresholdNotification(data);
+});
+
+ipcMain.on(TIMER_THRESHOLD_UPDATE, (e, state: TimerState) => {
+  currentTimerState = state;
+  
+  if (thresholdTrayManager && currentThresholdConfig) {
+    thresholdTrayManager.updateTimerState(state);
+  }
+});
+
+ipcMain.on(RESET_THRESHOLD_STATE, (e) => {
+  currentTimerState = null;
+  
+  if (thresholdTrayManager) {
+    thresholdTrayManager.reset();
   }
 });
 
