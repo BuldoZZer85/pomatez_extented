@@ -1,0 +1,478 @@
+/* Стили для компонентов пороговых значений */
+
+/* Настройки пороговых значений */
+.threshold-settings {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.threshold-settings.loading {
+  background: rgba(0, 0, 0, 0.7);
+}
+
+.loading-spinner {
+  color: white;
+  font-size: 18px;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+.threshold-settings-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.threshold-settings-header h2 {
+  margin: 0;
+  color: #1a202c;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  font-size: 28px;
+  cursor: pointer;
+  color: #718096;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s;
+}
+
+.close-button:hover {
+  background: #f7fafc;
+  color: #e53e3e;
+}
+
+.threshold-settings-content {
+  background: white;
+  border-radius: 12px;
+  padding: 30px;
+  width: 90%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.settings-description {
+  background: #f0f8ff;
+  border: 1px solid #bee3f8;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 24px;
+}
+
+.settings-description p {
+  margin: 0;
+  color: #2d3748;
+  line-height: 1.5;
+}
+
+.highlight {
+  background: #c6f6d5;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 500;
+  color: #22543d;
+}
+
+.highlight-red {
+  background: #fed7d7;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 500;
+  color: #742a2a;
+}
+
+.error-messages {
+  margin-bottom: 20px;
+}
+
+.error-message {
+  background: #fed7d7;
+  border: 1px solid #feb2b2;
+  color: #742a2a;
+  padding: 12px;
+  border-radius: 6px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.threshold-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.threshold-section {
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 20px;
+  background: #fafafa;
+}
+
+.threshold-section h3 {
+  margin: 0 0 16px 0;
+  color: #2d3748;
+  font-size: 18px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.threshold-inputs {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 12px;
+}
+
+.input-group {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.input-group label {
+  font-weight: 500;
+  color: #4a5568;
+  min-width: 80px;
+}
+
+.input-group input {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #cbd5e0;
+  border-radius: 6px;
+  font-size: 16px;
+  max-width: 80px;
+  text-align: center;
+}
+
+.input-group input:focus {
+  outline: none;
+  border-color: #3182ce;
+  box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.1);
+}
+
+.unit {
+  color: #718096;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.range-display {
+  font-size: 14px;
+  color: #4a5568;
+  text-align: center;
+  font-style: italic;
+  background: white;
+  padding: 8px;
+  border-radius: 6px;
+}
+
+.threshold-settings-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 20px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.reset-button {
+  background: #f7fafc;
+  border: 1px solid #cbd5e0;
+  color: #4a5568;
+  padding: 10px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+
+.reset-button:hover {
+  background: #edf2f7;
+  border-color: #a0aec0;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 12px;
+}
+
+.cancel-button, .save-button {
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 500;
+  transition: all 0.2s;
+  border: none;
+}
+
+.cancel-button {
+  background: #f7fafc;
+  color: #4a5568;
+  border: 1px solid #cbd5e0;
+}
+
+.cancel-button:hover {
+  background: #edf2f7;
+  border-color: #a0aec0;
+}
+
+.save-button {
+  background: #3182ce;
+  color: white;
+}
+
+.save-button:hover {
+  background: #2c5aa0;
+}
+
+/* Индикатор прогресса с порогами */
+.threshold-progress-indicator {
+  padding: 20px;
+  background: #fafafa;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+}
+
+.main-timer-display {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.timer-time {
+  font-size: 48px;
+  font-weight: 700;
+  font-family: 'Roboto Mono', monospace;
+  margin-bottom: 8px;
+  transition: color 0.3s ease;
+}
+
+.timer-status {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: #4a5568;
+  font-size: 14px;
+}
+
+.status-icon {
+  font-size: 16px;
+}
+
+.status-text {
+  font-weight: 500;
+}
+
+.threshold-progress-bar {
+  position: relative;
+  margin: 20px 0;
+}
+
+.progress-track {
+  position: relative;
+  background: #e2e8f0;
+  height: 8px;
+  border-radius: 4px;
+  overflow: visible;
+}
+
+.progress-fill {
+  position: relative;
+  height: 100%;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+.current-position-marker {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 12px;
+  height: 12px;
+  background: white;
+  border: 2px solid currentColor;
+  border-radius: 50%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.threshold-marker {
+  position: absolute;
+  top: -10px;
+  transform: translateX(-50%);
+  z-index: 10;
+}
+
+.marker-line {
+  width: 2px;
+  height: 28px;
+  margin: 0 auto 4px;
+  border-radius: 1px;
+}
+
+.marker-line-min {
+  background: #10b981;
+}
+
+.marker-line-max {
+  background: #ef4444;
+}
+
+.marker-label {
+  font-size: 12px;
+  font-weight: 500;
+  text-align: center;
+  white-space: nowrap;
+  color: #4a5568;
+}
+
+.threshold-info {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.threshold-info-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.info-label {
+  font-size: 12px;
+  color: #718096;
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.info-value {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.info-value.not-reached {
+  color: #4a5568;
+}
+
+.info-value.reached {
+  color: #10b981;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .threshold-settings-content {
+    width: 95%;
+    padding: 20px;
+  }
+  
+  .threshold-inputs {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .input-group {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+  
+  .input-group label {
+    min-width: auto;
+  }
+  
+  .timer-time {
+    font-size: 36px;
+  }
+  
+  .threshold-info {
+    flex-direction: column;
+    gap: 12px;
+  }
+}
+
+/* Темная тема */
+.dark-theme .threshold-settings-content {
+  background: #2d3748;
+  color: #e2e8f0;
+}
+
+.dark-theme .threshold-settings-header {
+  border-bottom-color: #4a5568;
+}
+
+.dark-theme .threshold-settings-header h2 {
+  color: #e2e8f0;
+}
+
+.dark-theme .threshold-section {
+  background: #374151;
+  border-color: #4a5568;
+}
+
+.dark-theme .threshold-section h3 {
+  color: #e2e8f0;
+}
+
+.dark-theme .input-group input {
+  background: #4a5568;
+  border-color: #718096;
+  color: #e2e8f0;
+}
+
+.dark-theme .input-group input:focus {
+  border-color: #63b3ed;
+}
+
+.dark-theme .range-display {
+  background: #4a5568;
+  color: #cbd5e0;
+}
+
+.dark-theme .threshold-progress-indicator {
+  background: #374151;
+  border-color: #4a5568;
+}
+
+.dark-theme .progress-track {
+  background: #4a5568;
+}
+
+.dark-theme .threshold-info {
+  border-top-color: #4a5568;
+}
