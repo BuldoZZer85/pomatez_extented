@@ -2,6 +2,7 @@ import Store, { Options } from "electron-store";
 import { nativeTheme } from "electron";
 import { isWindow } from "./helpers";
 import ElectronStore from "electron-store";
+import type { ThresholdConfig } from "@pomatez/shareables";
 
 type StoreProps = {
   userId?: string;
@@ -9,6 +10,8 @@ type StoreProps = {
   useNativeTitlebar?: boolean;
   compactMode?: boolean;
   openAtLogin?: boolean;
+  // Новое поле для хранения конфигурации порогов
+  thresholdConfig?: ThresholdConfig | null;
 };
 
 /**
@@ -31,7 +34,7 @@ class SafeStore<
    */
   safeSet<Key extends keyof T>(key: Key, value?: T[Key]) {
     try {
-      this.store.set(key, value);
+      this.store.set(key as string, value as any);
     } catch (error) {
       console.error("[Store] Safe Set", error);
     }
@@ -43,11 +46,11 @@ class SafeStore<
    */
   safeGet<Key extends keyof T>(key: Key): T[Key] | undefined {
     try {
-      return this.store.get(key);
+      return this.store.get(key as string) as T[Key];
     } catch (error) {
       console.error("[Store] Safe Get", error);
     }
-    return undefined;
+    return undefined as any;
   }
 }
 
@@ -58,6 +61,7 @@ const store = new SafeStore<StoreProps>({
     useNativeTitlebar: !isWindow(),
     compactMode: false,
     openAtLogin: false,
+    thresholdConfig: null,
   },
 });
 
