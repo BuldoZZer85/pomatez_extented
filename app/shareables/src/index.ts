@@ -12,6 +12,13 @@ export const SHOW_WINDOW = "SHOW_WINDOW";
 export const UPDATE_AVAILABLE = "UPDATE_AVAILABLE";
 export const INSTALL_UPDATE = "INSTALL_UPDATE";
 
+// Новые константы для пороговых значений
+export const SET_THRESHOLD_CONFIG = "SET_THRESHOLD_CONFIG";
+export const GET_THRESHOLD_CONFIG = "GET_THRESHOLD_CONFIG";
+export const THRESHOLD_NOTIFICATION = "THRESHOLD_NOTIFICATION";
+export const TIMER_THRESHOLD_UPDATE = "TIMER_THRESHOLD_UPDATE";
+export const RESET_THRESHOLD_STATE = "RESET_THRESHOLD_STATE";
+
 export const TO_MAIN: string[] = [
   SET_ALWAYS_ON_TOP,
   SET_FULLSCREEN_BREAK,
@@ -24,9 +31,20 @@ export const TO_MAIN: string[] = [
   CLOSE_WINDOW,
   SHOW_WINDOW,
   INSTALL_UPDATE,
+  SET_THRESHOLD_CONFIG,
+  GET_THRESHOLD_CONFIG,
+  RESET_THRESHOLD_STATE,
 ];
 
-export const FROM_MAIN: string[] = [UPDATE_AVAILABLE];
+export const FROM_MAIN: string[] = [
+  UPDATE_AVAILABLE,
+  THRESHOLD_NOTIFICATION,
+  TIMER_THRESHOLD_UPDATE,
+];
 
 export const RELEASE_NOTES_LINK =
   "https://github.com/zidoro/pomatez/releases/latest";
+
+// Экспорт типов для использования в других модулях
+export * from './types/ThresholdTimer';
+export * from './utils/thresholdTimer';
