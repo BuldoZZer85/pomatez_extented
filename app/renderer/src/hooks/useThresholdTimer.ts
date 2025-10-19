@@ -6,14 +6,14 @@ import {
   DEFAULT_THRESHOLD_CONFIG,
   checkThreshold,
   createThresholdNotificationText,
-} from 'shareables';
+} from '@pomatez/shareables';
 import {
   SET_THRESHOLD_CONFIG,
   GET_THRESHOLD_CONFIG,
   THRESHOLD_NOTIFICATION,
   TIMER_THRESHOLD_UPDATE,
   RESET_THRESHOLD_STATE,
-} from 'shareables';
+} from '@pomatez/shareables';
 
 interface UseThresholdTimerReturn {
   config: ThresholdConfig;
@@ -41,7 +41,7 @@ const useThresholdTimer = (): UseThresholdTimerReturn => {
   useEffect(() => {
     const loadConfig = async () => {
       try {
-        const savedConfig = await window.ipcRenderer.invoke(GET_THRESHOLD_CONFIG);
+        const savedConfig = await (window as any).ipcRenderer.invoke(GET_THRESHOLD_CONFIG);
         if (savedConfig) {
           setConfig(savedConfig);
         }
@@ -56,7 +56,7 @@ const useThresholdTimer = (): UseThresholdTimerReturn => {
   // Обновление конфигурации
   const updateConfig = useCallback((newConfig: ThresholdConfig) => {
     setConfig(newConfig);
-    window.ipcRenderer.send(SET_THRESHOLD_CONFIG, newConfig);
+    (window as any).ipcRenderer.send(SET_THRESHOLD_CONFIG, newConfig);
   }, []);
 
   // Обновление состояния таймера
@@ -114,20 +114,20 @@ const useThresholdTimer = (): UseThresholdTimerReturn => {
       setTimerState(newState);
       
       // Отправляем обновление в main process
-      window.ipcRenderer.send(TIMER_THRESHOLD_UPDATE, newState);
+      (window as any).ipcRenderer.send(TIMER_THRESHOLD_UPDATE, newState);
     },
     [config, timerState.minReached, timerState.maxReached]
   );
 
   // Сброс состояния пороговых значений
   const resetThresholdState = useCallback(() => {
-    setTimerState(prev => ({
+    setTimerState((prev: TimerState) => ({
       ...prev,
       minReached: false,
       maxReached: false,
     }));
     
-    window.ipcRenderer.send(RESET_THRESHOLD_STATE);
+    (window as any).ipcRenderer.send(RESET_THRESHOLD_STATE);
     lastNotificationTimeRef.current = 0;
   }, []);
 
@@ -140,7 +140,7 @@ const useThresholdTimer = (): UseThresholdTimerReturn => {
     const message = createThresholdNotificationText(notification);
     
     // Отправляем уведомление в main process
-    window.ipcRenderer.send(THRESHOLD_NOTIFICATION, {
+    (window as any).ipcRenderer.send(THRESHOLD_NOTIFICATION, {
       title,
       body: message,
       color: notification.color,
@@ -163,10 +163,10 @@ const useThresholdTimer = (): UseThresholdTimerReturn => {
       setTimerState(newState);
     };
 
-    window.ipcRenderer.on(TIMER_THRESHOLD_UPDATE, handleThresholdUpdate);
+    (window as any).ipcRenderer.on(TIMER_THRESHOLD_UPDATE, handleThresholdUpdate);
 
     return () => {
-      window.ipcRenderer.removeListener(TIMER_THRESHOLD_UPDATE, handleThresholdUpdate);
+      (window as any).ipcRenderer.removeListener(TIMER_THRESHOLD_UPDATE, handleThresholdUpdate);
     };
   }, []);
 
