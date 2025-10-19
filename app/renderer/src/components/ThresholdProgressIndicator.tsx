@@ -5,7 +5,7 @@ import {
   calculateThresholdProgress,
   getProgressColor,
   formatThresholdTime,
-} from 'shareables';
+} from '@pomatez/shareables';
 
 interface ThresholdProgressIndicatorProps {
   currentTime: number; // в секундах
