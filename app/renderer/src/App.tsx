@@ -6,6 +6,7 @@ import {
   ConnectorProvider,
 } from "contexts";
 import { Layout, Preloader } from "components";
+import ThresholdTimerIntegration from "components/ThresholdTimerIntegration";
 import { compactRoutes, routes } from "config";
 import { useAppSelector } from "hooks/storeHooks";
 
@@ -48,6 +49,9 @@ export default function App() {
         <ConnectorProvider>
           <Router>
             <Layout>
+              {/* Интеграция threshold таймера */}
+              <ThresholdTimerIntegration />
+              
               <Suspense fallback={<Preloader />}>
                 <Switch>
                   {settings["compactMode"]
